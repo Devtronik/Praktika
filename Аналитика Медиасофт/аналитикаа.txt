@@ -1,0 +1,253 @@
+1) Бизнес-логика мобильного приложения
+ 
+бизнес-логика мобильного приложения «Список покупок в магазинах» использовалась нотация BPMN (Business Process Model and Notation). 
+
+===================================       2       ===================================
+
+2) Основные функции приложения
+
+1. Создание и управление списками покупок
+
+2. Добавление,  удаление товаров в корзине
+
+3. История предыдущих покупок
+
+4. Синхронизация данных между клиентом и сервером
+
+5. Поиск товаров по названию
+
+6. Уведомления о предстоящих покупках
+
+===================================       3       ===================================
+
+3) Процесс синхронизации данных
+
+Диаграммы UML
+
+UML.png
+
+
+
+API методы
+
+• POST /lists — создание нового списка
+
+• GET /lists — получение всех списков пользователя
+
+• POST /lists/{id}/items — добавление товара в список
+
+• DELETE /lists/{id}/items/{itemId} — удаление товара из списка
+
+• PATCH /lists/{id}/items/{itemId} — отметка товара как купленного
+
+ER-диаграмма 
+
+ER.png
+
+
+===================================       4       ===================================
+
+4) Прототип одного из экранов мобильного приложения
+
+приложение.png
+
+===================================      5       ===================================
+
+5) Подробное описание функции покупки товара
+
+Описание функции:
+Функция позволяет пользователю отмечать товары в списке как купленные. При этом информация о покупке сохраняется на сервере.
+
+UML диаграммы:
+
+UML.png
+
+===================================       6       ===================================
+
+Вопросы к заказчику:
+
+1. Какие платформы должны поддерживаться?
+
+2. Какой объем данных планируется хранить на сервере?
+
+3. Есть ли требования к безопасности данных пользователей?
+
+4. Какой функционал должен быть реализован в первом релизе?
+
+5. Есть ли предпочтения по технологиям для реализации сервера?
+
+
+===================================       7       ===================================
+
+---------------------------------------------------    1    -------------------------------------  
+
+ CREATE TABLE Authors (
+    Id INTEGER PRIMARY KEY,
+    AuthorName VARCHAR(255)
+);
+
+CREATE TABLE Books (
+    Id INTEGER PRIMARY KEY,
+    AuthorId INTEGER,
+    BookName VARCHAR(255),
+    Price DECIMAL(10, 2),
+    FOREIGN KEY (AuthorId) REFERENCES Authors(Id)
+);
+
+INSERT INTO Authors (Id, AuthorName) VALUES
+(1, 'А.С. Пушкин'),
+(2, 'М.А. Булгаков'),
+(3, 'Л.Н. Толстой'),
+(4, 'П. Коэльо'),
+(5, 'Дж. Роулинг'),
+(6, 'Д. Браун');
+
+INSERT INTO Books (Id, AuthorId, BookName, Price) VALUES
+(1, 1, 'Евгений Онегин', 500),
+(2, 4, 'Алхимик', 700),
+(3, 1, 'Капитанская дочка', 1000),
+(4, 2, 'Мастер и Маргарита', 2000),
+(5, 5, 'Гарри Поттер', 2900),
+(6, 3, 'Война и мир', 1050),
+(7, 3, 'Анна Каренина', 550);
+
+SELECT
+    A.AuthorName,
+    SUM(B.Price) AS TotalPrice
+FROM
+    Authors A
+JOIN
+    Books B ON A.Id = B.AuthorId
+GROUP BY
+    A.AuthorName
+ORDER BY
+    TotalPrice DESC;
+
+---------------------------------------------------    2    -------------------------------------
+ Стоимость книг автора превышает 1500
+CREATE TABLE Authors (
+    Id INTEGER PRIMARY KEY,
+    AuthorName VARCHAR(255)
+);
+
+CREATE TABLE Books (
+    Id INTEGER PRIMARY KEY,
+    AuthorId INTEGER,
+    BookName VARCHAR(255),
+    Price DECIMAL(10, 2),
+    FOREIGN KEY (AuthorId) REFERENCES Authors(Id)
+);
+
+INSERT INTO Authors (Id, AuthorName) VALUES
+(1, 'А.С. Пушкин'),
+(2, 'М.А. Булгаков'),
+(3, 'Л.Н. Толстой'),
+(4, 'П. Коэльо'),
+(5, 'Дж. Роулинг'),
+(6, 'Д. Браун');
+
+INSERT INTO Books (Id, AuthorId, BookName, Price) VALUES
+(1, 1, 'Евгений Онегин', 500),
+(2, 4, 'Алхимик', 700),
+(3, 1, 'Капитанская дочка', 1000),
+(4, 2, 'Мастер и Маргарита', 2000),
+(5, 5, 'Гарри Поттер', 2900),
+(6, 3, 'Война и мир', 1050),
+(7, 3, 'Анна Каренина', 550);
+SELECT
+    A.AuthorName,
+    SUM(B.Price) AS TotalPrice
+FROM
+    Authors A
+JOIN
+    Books B ON A.Id = B.AuthorId
+GROUP BY
+    A.AuthorName
+HAVING
+    SUM(B.Price) > 1500;
+
+---------------------------------------------------    3    -------------------------------------
+
+ 3) Вывести авторов с количеством книг
+CREATE TABLE Authors (
+    Id INTEGER PRIMARY KEY,
+    AuthorName VARCHAR(255)
+);
+
+CREATE TABLE Books (
+    Id INTEGER PRIMARY KEY,
+    AuthorId INTEGER,
+    BookName VARCHAR(255),
+    Price DECIMAL(10, 2),
+    FOREIGN KEY (AuthorId) REFERENCES Authors(Id)
+);
+
+INSERT INTO Authors (Id, AuthorName) VALUES
+(1, 'А.С. Пушкин'),
+(2, 'М.А. Булгаков'),
+(3, 'Л.Н. Толстой'),
+(4, 'П. Коэльо'),
+(5, 'Дж. Роулинг'),
+(6, 'Д. Браун');
+
+INSERT INTO Books (Id, AuthorId, BookName, Price) VALUES
+(1, 1, 'Евгений Онегин', 500),
+(2, 4, 'Алхимик', 700),
+(3, 1, 'Капитанская дочка', 1000),
+(4, 2, 'Мастер и Маргарита', 2000),
+(5, 5, 'Гарри Поттер', 2900),
+(6, 3, 'Война и мир', 1050),
+(7, 3, 'Анна Каренина', 550);
+SELECT
+    A.AuthorName,
+    COUNT(B.Id) AS BookCount
+FROM
+    Authors A
+LEFT JOIN
+    Books B ON A.Id = B.AuthorId
+GROUP BY
+    A.AuthorName;
+
+
+---------------------------------------------------    4    -------------------------------------
+4)Получить автора без книг
+CREATE TABLE Authors (
+    Id INTEGER PRIMARY KEY,
+    AuthorName VARCHAR(255)
+);
+
+CREATE TABLE Books (
+    Id INTEGER PRIMARY KEY,
+    AuthorId INTEGER,
+    BookName VARCHAR(255),
+    Price DECIMAL(10, 2),
+    FOREIGN KEY (AuthorId) REFERENCES Authors(Id)
+);
+
+INSERT INTO Authors (Id, AuthorName) VALUES
+(1, 'А.С. Пушкин'),
+(2, 'М.А. Булгаков'),
+(3, 'Л.Н. Толстой'),
+(4, 'П. Коэльо'),
+(5, 'Дж. Роулинг'),
+(6, 'Д. Браун');
+
+INSERT INTO Books (Id, AuthorId, BookName, Price) VALUES
+(1, 1, 'Евгений Онегин', 500),
+(2, 4, 'Алхимик', 700),
+(3, 1, 'Капитанская дочка', 1000),
+(4, 2, 'Мастер и Маргарита', 2000),
+(5, 5, 'Гарри Поттер', 2900),
+(6, 3, 'Война и мир', 1050),
+(7, 3, 'Анна Каренина', 550);
+SELECT
+    A.AuthorName
+FROM
+    Authors A
+LEFT JOIN
+    Books B ON A.Id = B.AuthorId
+WHERE
+    B.Id IS NULL;
+
+
+
